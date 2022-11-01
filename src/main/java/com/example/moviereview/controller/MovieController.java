@@ -1,15 +1,13 @@
 package com.example.moviereview.controller;
 
-import com.example.moviereview.model.MovieConsume;
+import com.example.moviereview.model.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @Slf4j
@@ -35,9 +33,8 @@ public class MovieController {
         if (page != null) {
             baseurl.append("&page=").append(page);
         }
-        MovieConsume popularMovie = restTemplate.getForObject(baseurl.toString(), MovieConsume.class);
-        log.info(popularMovie.toString() + "");
-        return Arrays.asList(popularMovie);
+        MovieConsume objConsume = restTemplate.getForObject(baseurl.toString(), MovieConsume.class);
+        return Arrays.asList(objConsume);
     }
 
     @GetMapping("movie/now_playing")
@@ -50,8 +47,8 @@ public class MovieController {
         if (page != null) {
             baseurl.append("&page=").append(page);
         }
-        MovieConsume popularMovie = restTemplate.getForObject(baseurl.toString(), MovieConsume.class);
-        return Arrays.asList(popularMovie);
+        MovieConsume objConsume = restTemplate.getForObject(baseurl.toString(), MovieConsume.class);
+        return Arrays.asList(objConsume);
     }
 
     @GetMapping("movie/top_rated")
@@ -64,8 +61,8 @@ public class MovieController {
         if (page != null) {
             baseurl.append("&page=").append(page);
         }
-        MovieConsume popularMovie = restTemplate.getForObject(baseurl.toString(), MovieConsume.class);
-        return Arrays.asList(popularMovie);
+        MovieConsume objConsume = restTemplate.getForObject(baseurl.toString(), MovieConsume.class);
+        return Arrays.asList(objConsume);
     }
 
     @GetMapping("movie/upcoming")
@@ -78,8 +75,78 @@ public class MovieController {
         if (page != null) {
             baseurl.append("&page=").append(page);
         }
-        MovieConsume popularMovie = restTemplate.getForObject(baseurl.toString(), MovieConsume.class);
-        return Arrays.asList(popularMovie);
+        MovieConsume objConsume = restTemplate.getForObject(baseurl.toString(), MovieConsume.class);
+        return Arrays.asList(objConsume);
+    }
+
+    @GetMapping("keyword/{keyword_id}/movies")
+    public List<MovieConsume> getMovieByKeywordId(@PathVariable("keyword_id") String keywordId,
+                                                  @RequestParam(required = false) String language,
+                                                  @RequestParam(required = false) Boolean include_adult) {
+        StringBuilder baseurl = new StringBuilder();
+        baseurl.append(generateURL(api_key, "keyword/" + keywordId + "/movies"));
+        if (language != null) {
+            baseurl.append("&language=").append(language);
+        }
+        if (include_adult != null) {
+            baseurl.append("&include_adult=").append(include_adult);
+        }
+        MovieConsume objConsume = restTemplate.getForObject(baseurl.toString(), MovieConsume.class);
+        return Arrays.asList(objConsume);
+    }
+
+    @GetMapping("discover/movie")
+    public List<MovieConsume> discoverMovie(@RequestParam(required = false) String language,
+                                            @RequestParam(required = false) Boolean include_adult,
+                                            @RequestParam(required = false) Integer page,
+                                            @RequestParam(required = false) String sort_by,
+                                            @RequestParam(required = false) String with_genres) {
+        StringBuilder baseurl = new StringBuilder();
+        baseurl.append(generateURL(api_key, "discover/movie"));
+        if (language != null) {
+            baseurl.append("&language=").append(language);
+        }
+        if (include_adult != null) {
+            baseurl.append("&include_adult=").append(include_adult);
+        }
+        if (page != null) {
+            baseurl.append("&page=").append(page);
+        }
+        if (sort_by != null) {
+            baseurl.append("&sort_by=").append(sort_by);
+        }
+        if (with_genres != null) {
+            baseurl.append("&with_genres=").append(with_genres);
+        }
+        MovieConsume objConsume = restTemplate.getForObject(baseurl.toString(), MovieConsume.class);
+        return Arrays.asList(objConsume);
+    }
+
+    @GetMapping("movie/{movie_id}/recommendations")
+    public List<MovieConsume> getMovieRecommendation(@PathVariable("movie_id") String movieId,
+                                                     @RequestParam(required = false) String language,
+                                                     @RequestParam(required = false) String page) {
+        StringBuilder baseurl = new StringBuilder();
+        baseurl.append(generateURL(api_key, "movie/" + movieId + "/recommendations"));
+        if (language != null) {
+            baseurl.append("&language=").append(language);
+        }
+        if (page != null) {
+            baseurl.append("&page=").append(page);
+        }
+        MovieConsume objConsume = restTemplate.getForObject(baseurl.toString(), MovieConsume.class);
+        return Arrays.asList(objConsume);
+    }
+
+    @GetMapping("collection/{collection_id}")
+    public List<Collection> getCollection(@PathVariable("collection_id") String collectionId, @RequestParam(required = false) String language) {
+        StringBuilder baseurl = new StringBuilder();
+        baseurl.append(generateURL(api_key, "collection/" + collectionId));
+        if (language != null) {
+            baseurl.append("&language=").append(language);
+        }
+        Collection objConsume = restTemplate.getForObject(baseurl.toString(), Collection.class);
+        return Arrays.asList(objConsume);
     }
 
     /*@GetMapping("/latest")
@@ -112,8 +179,67 @@ public class MovieController {
         if (include_adult != null) {
             baseurl.append("&include_adult=").append(include_adult);
         }
-        MovieConsume popularMovie = restTemplate.getForObject(baseurl.toString(), MovieConsume.class);
-        return Arrays.asList(popularMovie);
+        MovieConsume objConsume = restTemplate.getForObject(baseurl.toString(), MovieConsume.class);
+        return Arrays.asList(objConsume);
+    }
+
+    @GetMapping("search/keyword")
+    public List<Keyword> searchKeyword(@RequestParam(required = false) Integer page,
+                                       @RequestParam String query) {
+        StringBuilder baseurl = new StringBuilder();
+        baseurl.append(generateURL(api_key, "search/keyword"));
+        if (query != null) {
+            baseurl.append("&query=").append(query);
+        }
+        if (page != null) {
+            baseurl.append("&page=").append(page);
+        }
+        Keyword objConsume = restTemplate.getForObject(baseurl.toString(), Keyword.class);
+        return Arrays.asList(objConsume);
+    }
+
+    @GetMapping("movie/{movie_id}")
+    public List<MovieDetail> getMovieDetail(@PathVariable("movie_id") String movieId,
+                                            @RequestParam(required = false) String language) {
+        StringBuilder baseurl = new StringBuilder();
+        baseurl.append(generateURL(api_key, "movie/" + movieId));
+        if (language != null) {
+            baseurl.append("&language=").append(language);
+        }
+        MovieDetail objConsume = restTemplate.getForObject(baseurl.toString(), MovieDetail.class);
+        return Arrays.asList(objConsume);
+    }
+
+    @GetMapping("movie/{movie_id}/credits")
+    public List<Credit> getCast(@PathVariable("movie_id") String movieId,
+                                @RequestParam(required = false) String language) {
+        StringBuilder baseurl = new StringBuilder();
+        baseurl.append(generateURL(api_key, "movie/" + movieId + "/credits"));
+        if (language != null) {
+            baseurl.append("&language=").append(language);
+        }
+        Credit objConsume = restTemplate.getForObject(baseurl.toString(), Credit.class);
+        return Arrays.asList(objConsume);
+    }
+
+    @GetMapping("movie/{movie_id}/videos")
+    public List<VideoConsume> getVideo(@PathVariable("movie_id") String movieId,
+                                       @RequestParam(required = false) String language) {
+        StringBuilder baseurl = new StringBuilder();
+        baseurl.append(generateURL(api_key, "movie/" + movieId + "/videos"));
+        if (language != null) {
+            baseurl.append("&language=").append(language);
+        }
+        VideoConsume objConsume = restTemplate.getForObject(baseurl.toString(), VideoConsume.class);
+        return Arrays.asList(objConsume);
+    }
+
+    @GetMapping("movie/{movie_id}/external_ids")
+    public List<Social> getSocial(@PathVariable("movie_id") String movieId) {
+        StringBuilder baseurl = new StringBuilder();
+        baseurl.append(generateURL(api_key, "movie/" + movieId + "/external_ids"));
+        Social objConsume = restTemplate.getForObject(baseurl.toString(), Social.class);
+        return Arrays.asList(objConsume);
     }
 
 }
