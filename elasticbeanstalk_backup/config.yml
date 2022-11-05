@@ -1,0 +1,22 @@
+branch-defaults:
+  default:
+    environment: Viewieapi-env
+    group_suffix: null
+  dev:
+    environment: null
+deploy:
+  artifact: target/springdoc-book-service-0.0.1-SNAPSHOT.jar
+global:
+  application_name: api-movie-review-main
+  branch: null
+  default_ec2_keyname: aws-eb
+  default_platform: Corretto 11 running on 64bit Amazon Linux 2
+  default_region: ap-southeast-1
+  include_git_submodules: true
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: eb-cli
+  repository: null
+  sc: git
+  workspace_type: Application
