@@ -1,6 +1,6 @@
-package com.example.moviereview.model;
+package com.example.moviereview.model.movie;
 
-public class Crew {
+public class Cast {
     public boolean adult;
     public int gender;
     public int id;
@@ -9,7 +9,8 @@ public class Crew {
     public String original_name;
     public double popularity;
     public String profile_path;
+    public int cast_id;
+    public String character;
     public String credit_id;
-    public String department;
-    public String job;
+    public int order;
 }

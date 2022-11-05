@@ -1,16 +1,19 @@
-package com.example.moviereview.model;
+package com.example.moviereview.model.movie;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@Data
+@NoArgsConstructor
 public class MovieDetail{
     public boolean adult;
     public String backdrop_path;
     public BelongsToCollection belongs_to_collection; //xem lai
-    public int budget;
+    public long budget;
     public ArrayList<Genre> genres;
     public String homepage;
     public int id;
@@ -23,7 +26,7 @@ public class MovieDetail{
     public ArrayList<ProductionCompany> production_companies;
     public ArrayList<ProductionCountry> production_countries;
     public String release_date;
-    public int revenue;
+    public long revenue;
     public int runtime;
     public ArrayList<SpokenLanguage> spoken_languages;
     public String status;
@@ -31,6 +34,6 @@ public class MovieDetail{
     public String title;
     public boolean video;
     public double vote_average;
-    public int vote_count;
+    public long vote_count;
 }
 

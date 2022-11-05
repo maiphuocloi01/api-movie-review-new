@@ -1,13 +1,10 @@
 package com.example.moviereview.controller;
 
-import com.example.moviereview.model.*;
+import com.example.moviereview.model.movie.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.Arrays;
-import java.util.List;
 
 @RestController
 @Slf4j
@@ -234,6 +231,28 @@ public class MovieController {
         baseurl.append(generateURL(api_key, "movie/" + movieId + "/external_ids"));
         return restTemplate.getForObject(baseurl.toString(), Social.class);
 
+    }
+
+    @GetMapping("credit/{credit_id}")
+    public CreditConsume getCreditDetail(@PathVariable("credit_id") String credit_id) {
+        StringBuilder baseurl = new StringBuilder();
+        baseurl.append(generateURL(api_key, "credit/" + credit_id));
+        return restTemplate.getForObject(baseurl.toString(), CreditConsume.class);
+    }
+
+    @GetMapping("trending/movie/{time_window}")
+    public MovieConsume getTrendingMovie(@PathVariable("time_window") String time_window,
+                                         @RequestParam(required = false) String language,
+                                         @RequestParam(required = false) String page) {
+        StringBuilder baseurl = new StringBuilder();
+        if (language != null) {
+            baseurl.append("&language=").append(language);
+        }
+        if (page != null) {
+            baseurl.append("&page=").append(page);
+        }
+        baseurl.append(generateURL(api_key, "trending/movie/" + time_window));
+        return restTemplate.getForObject(baseurl.toString(), MovieConsume.class);
     }
 
 }

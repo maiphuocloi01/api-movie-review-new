@@ -1,4 +1,4 @@
-package com.example.moviereview.model;
+package com.example.moviereview.model.movie;
 
 public class ProductionCompany {
     public int id;

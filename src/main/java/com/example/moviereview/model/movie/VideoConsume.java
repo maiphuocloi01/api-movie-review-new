@@ -1,4 +1,4 @@
-package com.example.moviereview.model;
+package com.example.moviereview.model.movie;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
