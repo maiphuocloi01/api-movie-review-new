@@ -125,6 +125,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public void updateImageById(String userId, HashMap<String, String> updateFields) {
+        User user = userRepository.findUserById(userId);
+        if (user == null) {
+            throw new UsernameNotFoundException("user with " + userId + " not found");
+        }
+        customUserRepository.updateInfoUserById(userId, updateFields);
+    }
+
+    @Override
     public void changePasswordById(String userId, String oldPassword, String newPassword) {
         Optional<User> existUser = userRepository.findById(userId);
         if (existUser.isPresent()) {

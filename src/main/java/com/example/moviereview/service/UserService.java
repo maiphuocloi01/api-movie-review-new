@@ -12,5 +12,6 @@ public interface UserService {
     User getUserById(String userId);
     HashMap<String, Double> getStatisticsByUserId(String userId);
     void updateUserById(String userId, HashMap<String, String> updateFields);
+    void updateImageById(String userId, HashMap<String, String> updateFields);
     void changePasswordById(String userId, String oldPassword, String newPassword);
 }
