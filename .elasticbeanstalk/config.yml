@@ -1,0 +1,19 @@
+branch-defaults:
+  dev:
+    environment: Viewieapi-env
+environment-defaults:
+  Viewieapi-env:
+    branch: null
+    repository: null
+global:
+  application_name: viewie-api
+  default_ec2_keyname: null
+  default_platform: Corretto 11 running on 64bit Amazon Linux 2
+  default_region: ap-southeast-1
+  include_git_submodules: true
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: eb-cli
+  sc: git
+  workspace_type: Application
