@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +33,10 @@ public class ReviewService {
         return user.getReviews();
     }
 
+    public Optional<Review> getReviewsByUserIdAndMovieId(String userId, String movieId) {
+        return reviewRepository.findReviewsByMovieId(movieId).stream().filter(obj ->
+            obj.getAuthor().getId().equals(userId)).findFirst();
+    }
     public Review getReviewById(String reviewId) {
         Review review = reviewRepository.findReviewById(reviewId);
         if (review == null) {

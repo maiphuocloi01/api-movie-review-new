@@ -240,6 +240,11 @@ public class MovieController {
         return restTemplate.getForObject(baseurl.toString(), CreditConsume.class);
     }
 
+    @GetMapping("/movie/{movie_id}/images")
+    public ImageConsume getImages(@PathVariable("movie_id") String movie_id) {
+        return restTemplate.getForObject(generateURL(api_key, "movie/" + movie_id + "/images"), ImageConsume.class);
+    }
+
     @GetMapping("trending/movie/{time_window}")
     public MovieConsume getTrendingMovie(@PathVariable("time_window") String time_window,
                                          @RequestParam(required = false) String language,
@@ -254,5 +259,7 @@ public class MovieController {
         baseurl.append(generateURL(api_key, "trending/movie/" + time_window));
         return restTemplate.getForObject(baseurl.toString(), MovieConsume.class);
     }
+
+
 
 }

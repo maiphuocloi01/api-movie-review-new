@@ -2,7 +2,6 @@ package com.example.moviereview.controller;
 
 import com.example.moviereview.model.ResponseObject;
 import com.example.moviereview.model.User;
-import com.example.moviereview.model.UserInfo;
 import com.example.moviereview.service.FileService;
 import com.example.moviereview.service.FirebaseStorageStrategy;
 import com.example.moviereview.service.UserService;
@@ -12,10 +11,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 @RestController
@@ -43,14 +44,14 @@ public class ImageController {
     String suffixURL = "?alt=media";
 
     @PostMapping("/user/image")
-    public ResponseEntity<Object> updateImage(@RequestParam("file") MultipartFile multipartFile) throws Exception{
+    public ResponseEntity<Object> updateImage(@RequestParam("file") MultipartFile multipartFile) throws Exception {
         String userId = SecurityContextHolder.getContext().getAuthentication().getCredentials().toString();
         //String IMAGE_URL = firebaseStorageStrategy.uploadFile(multipartFile);
         User user = userService.getUserById(userId);
-        if(user.getAvatar() != null || !user.getAvatar().equals("")){
+        if (user.getAvatar() != null || !user.getAvatar().equals("")) {
             String oldImageName = user.getAvatar().substring(prefixURL.length(), user.getAvatar().length() - suffixURL.length());
             boolean isDelete = fileService.deleteFile(oldImageName);
-            if(isDelete){
+            if (isDelete) {
                 log.info("Delete file success");
             }
         }

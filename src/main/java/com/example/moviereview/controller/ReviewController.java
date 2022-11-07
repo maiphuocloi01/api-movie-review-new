@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/reviews")
@@ -33,6 +34,18 @@ public class ReviewController {
     @GetMapping("/users/{userId}")
     public List<Review> getReviewsByUserId(@PathVariable("userId") String userId) {
         return reviewService.getReviewsByUserId(userId);
+    }
+
+    @GetMapping("/users/{userId}/{movieId}")
+    public ResponseEntity<Object> getReviewsByUserIdAndMovieId(@PathVariable("userId") String userId, @PathVariable("movieId") String movieId) {
+        Optional<Review> result = reviewService.getReviewsByUserIdAndMovieId(userId, movieId);
+        if (result.isPresent()){
+            return ResponseEntity.status(HttpStatus.OK).body(result.get());
+        } else {
+            HashMap<String,String> response = new HashMap<>();
+            response.put("error", "Review not found");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
     }
 
     @GetMapping(value = "/{reviewId}")
