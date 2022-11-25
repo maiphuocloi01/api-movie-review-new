@@ -48,7 +48,7 @@ public class ImageController {
         String userId = SecurityContextHolder.getContext().getAuthentication().getCredentials().toString();
         //String IMAGE_URL = firebaseStorageStrategy.uploadFile(multipartFile);
         User user = userService.getUserById(userId);
-        if (user.getAvatar() != null || !user.getAvatar().equals("")) {
+        if (user.getAvatar() != null) {
             String oldImageName = user.getAvatar().substring(prefixURL.length(), user.getAvatar().length() - suffixURL.length());
             boolean isDelete = fileService.deleteFile(oldImageName);
             if (isDelete) {

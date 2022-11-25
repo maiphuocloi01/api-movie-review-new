@@ -1,5 +1,6 @@
 package com.example.moviereview.model;
 
+import com.google.firebase.auth.UserRecord;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
@@ -8,6 +9,7 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,11 +23,13 @@ import java.util.Collections;
 import java.util.List;
 
 @Document(collection = "users")
-@Data @NoArgsConstructor
-public class User implements UserDetails {
+@Data
+@NoArgsConstructor
+public class User implements UserDetails, Authentication {
 
     @Id
     private String id;
+
 
     private String email;
     private String password;
@@ -36,8 +40,14 @@ public class User implements UserDetails {
     private LocalDate birthday;
 
     @ReadOnlyProperty
-    @DocumentReference(lookup="{'author':?#{#self._id} }", lazy=true)
+    @DocumentReference(lookup = "{'author':?#{#self._id} }", lazy = true)
     List<Review> reviews;
+
+    private UserRecord userRecord;
+
+    public User(UserRecord userRecord) {
+        this.userRecord = userRecord;
+    }
 
     private Boolean locked = false;
     private Boolean enabled = false;
@@ -49,6 +59,36 @@ public class User implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority("USER");
         return Collections.singletonList(authority);
+    }
+
+    @Override
+    public Object getCredentials() {
+        return this.getId();
+    }
+
+    @Override
+    public Object getDetails() {
+        return null;
+    }
+
+    @Override
+    public Object getPrincipal() {
+        return null;
+    }
+
+    @Override
+    public boolean isAuthenticated() {
+        return false;
+    }
+
+    @Override
+    public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
+
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
     }
 
     @Override

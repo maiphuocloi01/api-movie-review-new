@@ -27,6 +27,23 @@ public class AuthController {
         }
     }
 
+    @PostMapping("/login-with-google")
+    public ResponseEntity<Object> loginWithGoogle(@RequestBody User request) {
+        try {
+            User userExist = userService.checkEmailExist(request.getEmail());
+            if(userExist != null){
+                return ResponseEntity.status(HttpStatus.OK).body(userExist);
+            } else {
+                User user = userService.signUpUserByGoogle(request);
+                return ResponseEntity.status(HttpStatus.CREATED).body(user);
+            }
+        } catch (Exception e) {
+            HashMap<String, String> response = new HashMap<>();
+            response.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
     @PutMapping("/registration/enable")
     public ResponseEntity<Object> enableUser(@RequestBody HashMap<String, String> request) {
         try {

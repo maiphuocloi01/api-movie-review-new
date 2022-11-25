@@ -49,6 +49,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public User signUpUserByGoogle(User user) {
+        userRepository.save(user);
+        return user;
+    }
+
+    @Override
     public void enableUserByEmail(String email) {
         User userExist = userRepository.findUserByEmail(email);
         if (userExist != null) {
@@ -80,6 +86,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             throw new UsernameNotFoundException("email not found");
         }
         user.setPassword("******");
+        return user;
+    }
+
+    @Override
+    public User checkEmailExist(String email) {
+        User user = userRepository.findUserByEmail(email);
+        if (user != null) {
+            user.setPassword("******");
+        }
         return user;
     }
 

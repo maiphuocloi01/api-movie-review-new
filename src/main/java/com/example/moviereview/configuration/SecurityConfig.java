@@ -1,9 +1,13 @@
 package com.example.moviereview.configuration;
 
+import com.example.moviereview.firebase.FirebaseEntryPoint;
+import com.example.moviereview.firebase.FirebaseFilter;
+import com.example.moviereview.firebase.FirebaseProvider;
+import com.example.moviereview.repository.FirebaseRepository;
 import com.example.moviereview.security.JWTAuthenticationFilter;
-import com.example.moviereview.security.JWTAuthorizationFilter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,7 +16,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -22,16 +25,35 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 
 @Configuration
 @EnableWebSecurity
-@AllArgsConstructor @Slf4j
+@AllArgsConstructor
+@Slf4j
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @Autowired
+    FirebaseEntryPoint entryPoint;
+
+    @Autowired
+    FirebaseProvider provider;
+
+    @Autowired
+    FirebaseRepository firebaseRepository;
+
+    /*@Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.authorizeRequests().anyRequest().authenticated();
+        http.exceptionHandling().authenticationEntryPoint(entryPoint);
+        http.addFilterBefore(new FirebaseFilter(), BasicAuthenticationFilter.class);
+        http.authenticationProvider(provider());
+        return http.build();
+    }*/
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(provider());
+        auth.authenticationProvider(provider()).authenticationProvider(provider);
     }
+
     @Bean
     public DaoAuthenticationProvider provider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
@@ -54,8 +76,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers(PUT).hasAuthority("USER");
         http.authorizeRequests().antMatchers(DELETE).hasAuthority("USER");
         http.authorizeRequests().anyRequest().authenticated();
+        http.exceptionHandling().authenticationEntryPoint(entryPoint);
         http.addFilter(jwtAuthenticationFilter);
-        http.addFilterBefore(new JWTAuthorizationFilter(authenticationManagerBean()), UsernamePasswordAuthenticationFilter.class);
+        //http.addFilterBefore(new JWTAuthorizationFilter(authenticationManagerBean()), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new FirebaseFilter(authenticationManagerBean(), firebaseRepository), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
@@ -63,6 +87,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+
 
 }
 

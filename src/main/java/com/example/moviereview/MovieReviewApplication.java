@@ -1,5 +1,7 @@
 package com.example.moviereview;
 
+import com.example.moviereview.firebase.FirebaseEntryPoint;
+import com.example.moviereview.firebase.FirebaseProvider;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;

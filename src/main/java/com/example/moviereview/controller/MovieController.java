@@ -20,6 +20,17 @@ public class MovieController {
         return base_url + type + "?api_key=" + apiKey;
     }
 
+    @GetMapping("person/{person_id}")
+    public PersonConsume getPerson(@PathVariable("person_id") String person_id,
+                                  @RequestParam(required = false) String language) {
+        StringBuilder baseurl = new StringBuilder();
+        baseurl.append(generateURL(api_key, "person/" + person_id));
+        if (language != null) {
+            baseurl.append("&language=").append(language);
+        }
+        return restTemplate.getForObject(baseurl.toString(), PersonConsume.class);
+    }
+
     @GetMapping("movie/popular")
     public MovieConsume getPopular(@RequestParam(required = false) String language, @RequestParam(required = false) String page) {
         StringBuilder baseurl = new StringBuilder();
@@ -259,7 +270,6 @@ public class MovieController {
         baseurl.append(generateURL(api_key, "trending/movie/" + time_window));
         return restTemplate.getForObject(baseurl.toString(), MovieConsume.class);
     }
-
 
 
 }
