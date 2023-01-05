@@ -47,7 +47,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setStatus(403);
         Map<String, String> error = new HashMap<>();
         if (failed.getMessage().equals("Bad credentials")) {
-            error.put("error", "wrong password");
+            error.put("error", "Wrong password");
         } else {
             error.put("error", failed.getMessage());
         }
